@@ -114,6 +114,7 @@ depositBtn.addEventListener('click', function(){
         SaveItemToLocalStorage(item);
         PopulatePage();
         counter++;
+        depositField.value = '';
     }
 });
 
@@ -133,6 +134,8 @@ expenseBtn.addEventListener('click', function(){
     } else {
         SaveItemToLocalStorage(item);
         PopulatePage();
+        expenseNameField.value = '';
+        expenseNumberField.value = '';
     }
 });
 
