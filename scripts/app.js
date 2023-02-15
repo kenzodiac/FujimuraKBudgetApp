@@ -101,23 +101,28 @@ function CreateElements(){
     let runningTot = 0;
     ledgerInjectionArea.innerHTML = '';
 
-
     //create table
     let table = document.createElement('table');
+    table.style = 'margin-right: auto; margin-left: auto;';
     
     //create first row of table titles
     let tableTitlesRow = document.createElement('tr');
     tableTitlesRow.style = 'background-color: rgba(0,0,40,.5); color: white;'
     let idTitle = document.createElement('th');
     idTitle.textContent = 'ID:';
+    idTitle.style="padding-right: .5rem; padding-left: .5rem;"
     let descTitle = document.createElement('th');
     descTitle.textContent = 'Description:';
+    descTitle.style="padding-right: .5rem; padding-left: .5rem;"
     let amountTitle = document.createElement('th');
     amountTitle.textContent = 'Amount:';
+    amountTitle.style="padding-right: .5rem; padding-left: .5rem;"
     let totalTitle = document.createElement('th');
     totalTitle.textContent = 'Total:';
+    totalTitle.style="padding-right: .5rem; padding-left: .5rem;"
     let deleteTitle = document.createElement('th');
     deleteTitle.textContent = 'Delete:'
+    deleteTitle.style="padding-right: .5rem; padding-left: .5rem;"
 
     //append components into main component
     tableTitlesRow.appendChild(idTitle);
