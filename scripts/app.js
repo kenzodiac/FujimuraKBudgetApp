@@ -80,13 +80,124 @@ function PopulateTotalExpenses(){
 function PopulateRemainingBudget(){
     remainingBudget = (initialBudget - totalExpenses);
     remainder.textContent = remainingBudget;
+    if (remainingBudget < 0){
+        remainder.style = 'color: red;';
+    } else {
+        remainder.style = 'color: black;';
+    }
 };
 
 function PopulatePage(){
     PopulateBudget();
     PopulateTotalExpenses();
     PopulateRemainingBudget();
+    CreateElements();
 };
+
+//FUNCTION FOR DISPLAYING TABULATED BUDGET INFORMATION
+function CreateElements(){
+    let items = GetLocalStorage();
+    let lineCounter = 1;
+    let runningTot = 0;
+    ledgerInjectionArea.innerHTML = '';
+
+
+    //create table
+    let table = document.createElement('table');
+    
+    //create first row of table titles
+    let tableTitlesRow = document.createElement('tr');
+    tableTitlesRow.style = 'background-color: rgba(0,0,40,.5); color: white;'
+    let idTitle = document.createElement('th');
+    idTitle.textContent = 'ID:';
+    let descTitle = document.createElement('th');
+    descTitle.textContent = 'Description:';
+    let amountTitle = document.createElement('th');
+    amountTitle.textContent = 'Amount:';
+    let totalTitle = document.createElement('th');
+    totalTitle.textContent = 'Total:';
+    let deleteTitle = document.createElement('th');
+    deleteTitle.textContent = 'Delete:'
+
+    //append components into main component
+    tableTitlesRow.appendChild(idTitle);
+    tableTitlesRow.appendChild(descTitle);
+    tableTitlesRow.appendChild(amountTitle);
+    tableTitlesRow.appendChild(totalTitle);
+    tableTitlesRow.appendChild(deleteTitle);
+    table.appendChild(tableTitlesRow);
+
+    //.map to create table components
+    items.map(item => {
+        //creating table rows for inserting into ledger table
+            //table cell for displaying item id
+            let idTd = document.createElement('td');
+            idTd.textContent = item.id;
+            idTd.style = 'color: white;';
+
+            //table cell for displaying description
+            let descTd = document.createElement('td');
+            descTd.textContent = item.name;
+            descTd.style = 'color: white;';
+
+            //table cell for displaying item dollar amount
+            let amountTd = document.createElement('td');
+            if (item.type === 'expense'){
+                amountTd.textContent = '-$' + item.amount;
+                amountTd.style = 'color: yellow;';
+            } else {
+                amountTd.textContent = '+$' + item.amount;
+                amountTd.style = 'color: greenyellow;';
+            }
+
+            //table cell for displaying running total
+            let totTd = document.createElement('td');
+            if (item.type === 'expense'){
+                runningTot -= item.amount;
+            } else {
+                runningTot += item.amount;
+            }
+            totTd.textContent = '$' + runningTot;
+            if (runningTot >= 0){
+                totTd.style = 'color: white;';
+            } else {
+                totTd.style = 'color: red';
+            }
+
+            //table cell for displaying delete item button
+            let deleteTd = document.createElement('td');
+            let deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'btn btn-danger deleteBtnStyle';
+            deleteBtn.textContent = 'X';
+            deleteBtn.addEventListener('click', function(){
+                RemoveFromLocalStorage(item);
+                // WipeStaging();
+                CreateElements();
+            });
+            deleteTd.appendChild(deleteBtn);
+
+            //table row for combining all of the cells
+            let rowTd = document.createElement('tr');
+            if (lineCounter % 2 === 1) {
+                rowTd.style = 'background-color: rgba(0,0,0,.4);'
+            } else {
+                rowTd.style = 'background-color: rgba(0,0,0,.6);'
+            }
+            lineCounter++;
+        //appending components into table
+        rowTd.appendChild(idTd);
+        rowTd.appendChild(descTd);
+        rowTd.appendChild(amountTd);
+        rowTd.appendChild(totTd);
+        rowTd.appendChild(deleteTd);
+        table.appendChild(rowTd);
+    });
+    //inject table into page, but only if there is information for it
+    if (items.length != 0) {
+        ledgerInjectionArea.appendChild(table);
+    }
+}
 
 //EVENT LISTENER FOR PAGE BUTTONS
 //deposit button for adding funds
